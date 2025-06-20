@@ -66,15 +66,15 @@ $ cp env.example .env
 $ php artisan key:generate
 # Pas indien nodig je DB-gegevens aan
 
-# 5. Docker-services starten (database & mail)
+# 5. Docker-services starten (app, database & mail)
 $ docker compose up -d
 
 # 6. Database migreren & seeden
 $ php artisan migrate --seed
 
 # 7. Start ontwikkelen
-$ bun run dev &   # Vite dev-server (Bun runt het `dev`-script)
-$ php artisan serve
+$ bun run dev    # start Vite dev-server
+# Open daarna http://localhost:8000 in je browser.
 ```
 
 > Tip: laat `bun run dev` continu draaien; Vite ververst de pagina automatisch.
