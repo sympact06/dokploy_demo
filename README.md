@@ -1,9 +1,9 @@
 # Dokploy Demo – Laravel + Inertia
 
 Een kant-en-klare voorbeeldapplicatie die laat zien hoe je een moderne Laravel-backend
-combineert met een React/Inertia-frontend **zonder** extra Docker-bestanden.  
-Met behulp van **Nixpacks** kan dit project direct worden gebouwd en uitgerold
-op **Dokploy**.
+combineert met een React/Inertia-frontend mét een kant-en-klare **Docker Compose**-configuratie.  
+Met behulp van **Nixpacks** kan dit project nog steeds direct worden gebouwd en uitgerold
+op **Dokploy**, maar lokaal heb je met één commando een volledig werkende stack (Laravel + MySQL + Mailpit).
 
 ---
 
@@ -37,9 +37,8 @@ Het doel van deze repository is om **plug-and-play** te zijn op Dokploy:
 Lokaal:
 * PHP ^8.2 met ext-pdo, ext-openssl, ext-mbstring, ext-intl
 * Composer
-* Node ^20 + pnpm of npm
-* (optioneel) Bun voor snellere Vite-dev-server
-* een lokale database (MySQL of PostgreSQL)
+* Node ^20 + **Bun** (package-manager & runtime)
+* Docker + Docker Compose (voor de database en Mailpit)
 
 In Dokploy:
 * Een Dokploy-account + een server
@@ -60,18 +59,21 @@ $ cd dokploy_demo
 $ composer install
 
 # 3. Node-afhankelijkheden
-$ pnpm install # of npm install
+$ bun install
 
 # 4. .env aanmaken
 $ cp env.example .env
 $ php artisan key:generate
 # Pas indien nodig je DB-gegevens aan
 
-# 5. Database opzetten
+# 5. Docker-services starten (database & mail)
+$ docker compose up -d
+
+# 6. Database migreren & seeden
 $ php artisan migrate --seed
 
-# 6. Start ontwikkelen
-$ bun run dev      # volgens persoonlijke voorkeur van de auteur
+# 7. Start ontwikkelen
+$ bun run dev &   # Vite dev-server (Bun runt het `dev`-script)
 $ php artisan serve
 ```
 
@@ -101,7 +103,7 @@ $ php artisan serve
 5. **Deploy**  
    Klik op *Deploy*.  Dokploy
    * checkt de repo uit
-   * bouwt via Nixpacks (installeert PHP, Node, Composer & pnpm)
+   * bouwt via Nixpacks (installeert PHP, Bun, Composer)
    * voert `vite build` uit
    * start Nginx/Php-FPM
 6. **Domein koppelen**  
@@ -122,7 +124,7 @@ $ php artisan serve
 | `APP_DEBUG`          | ja        | `false` in Dokploy                    |
 | `APP_URL`            | nee       | Publieke URL (https://example.com)     |
 | `DB_CONNECTION`      | ja        | `mysql` of `pgsql`                     |
-| `DB_HOST`/`PORT`/... | ja        | Door Dokploy verstrekt                 |
+| `DB_HOST`/`PORT`/... | ja        | Door Docker Compose (lokaal) of Dokploy (prod) |
 | `NIXPACKS_PHP_ROOT_DIR` | ja   | Altijd `/app/public`                   |
 
 Alle overige standaard Laravel-variabelen (cache, queue, mail) kun je naar
