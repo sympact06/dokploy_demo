@@ -34,8 +34,8 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    ports:
-      - "80:80"
+    expose:
+      - '80'
     environment:
       APP_ENV: local
       APP_DEBUG: "true"
