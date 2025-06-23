@@ -50,6 +50,8 @@ services:
       DB_PASSWORD: laravel
       DB_CONNECTION: mysql
       WEB_DOCUMENT_ROOT: /app/public
+      ASSET_URL: https://demo.olivierflentge.nl
+      FORCE_HTTPS: "true"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.laravel.rule=Host(`demo.olivierflentge.nl`)"
