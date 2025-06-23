@@ -48,6 +48,7 @@ services:
       DB_DATABASE: laravel
       DB_USERNAME: laravel
       DB_PASSWORD: laravel
+      DB_CONNECTION: mysql
       WEB_DOCUMENT_ROOT: /app/public
     labels:
       - "traefik.enable=true"
