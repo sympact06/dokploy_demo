@@ -18,12 +18,16 @@ services:
       interval: 5s
       timeout: 10s
       retries: 3
+    networks:
+      - dokploy-network
 
   mailpit:
     image: axllent/mailpit:latest
     restart: unless-stopped
     ports:
       - "8025:8025"
+    networks:
+      - dokploy-network
 
   app:
     image: webdevops/php-apache:8.2
@@ -46,9 +50,19 @@ services:
       DB_PASSWORD: laravel
       WEB_DOCUMENT_ROOT: /app/public
     labels:
-      - traefik.enable=true
+      - "traefik.enable=true"
+      - "traefik.http.routers.laravel.rule=Host(`demo.olivierflentge.nl`)"
+      - "traefik.http.routers.laravel.entrypoints=websecure"
+      - "traefik.http.routers.laravel.tls.certresolver=letsencrypt"
+      - "traefik.http.services.laravel.loadbalancer.server.port=80"
     command: >-
       bash -c "composer install --no-dev --optimize-autoloader && supervisord -n"
+    networks:
+      - dokploy-network
 
 volumes:
-  db-data: 
+  db-data:
+
+networks:
+  dokploy-network:
+    external: true 
