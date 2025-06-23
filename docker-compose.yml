@@ -56,7 +56,10 @@ services:
       - "traefik.http.routers.laravel.tls.certresolver=letsencrypt"
       - "traefik.http.services.laravel.loadbalancer.server.port=80"
     command: >-
-      bash -c "composer install --no-dev --optimize-autoloader && supervisord -n"
+      bash -c "composer install --no-dev --optimize-autoloader \
+      && chown -R application:application storage bootstrap/cache \
+      && chmod -R ug+rwX storage bootstrap/cache \
+      && supervisord -n"
     networks:
       - dokploy-network
 
